@@ -7,8 +7,9 @@ import (
 	"os/exec"
 )
 
-func generate() (string, bool) {
-	cmd := exec.Command("go", "generate", "./...")
+func gqlGenerate() (string, bool) {
+	buildLog("GQL generating...")
+	cmd := exec.Command("gqlgen")
 
 	stderr, err := cmd.StderrPipe()
 	if err != nil {
@@ -38,11 +39,6 @@ func generate() (string, bool) {
 
 func build() (string, bool) {
 	buildLog("Building...")
-
-	output, ok := generate()
-	if !ok {
-		return output, false
-	}
 
 	cmd := exec.Command("go", "build", "-o", buildPath(), root())
 

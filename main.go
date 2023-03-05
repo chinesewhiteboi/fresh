@@ -21,6 +21,7 @@ import (
 )
 
 func main() {
+	fmt.Println("running my fresh!")
 	configPath := flag.String("c", "", "config file path")
 	flag.Parse()
 

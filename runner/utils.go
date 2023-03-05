@@ -47,7 +47,7 @@ func isWatchedFile(path string) bool {
 
 	ext := filepath.Ext(path)
 
-	for _, e := range strings.Split(settings["valid_ext"], ",") {
+	for _, e := range strings.Split(settings["watch_ext"], ",") {
 		if strings.TrimSpace(e) == ext {
 			return true
 		}
@@ -57,15 +57,27 @@ func isWatchedFile(path string) bool {
 }
 
 func shouldRebuild(eventName string) bool {
-	for _, e := range strings.Split(settings["no_rebuild_ext"], ",") {
+	for _, e := range strings.Split(settings["rebuild_ext"], ",") {
 		e = strings.TrimSpace(e)
 		fileName := strings.Replace(strings.Split(eventName, ":")[0], `"`, "", -1)
 		if strings.HasSuffix(fileName, e) {
-			return false
+			return true
 		}
 	}
 
-	return true
+	return false
+}
+
+func shouldRegenerate(eventName string) bool {
+	for _, e := range strings.Split(settings["regenerate_ext"], ",") {
+		e = strings.TrimSpace(e)
+		fileName := strings.Replace(strings.Split(eventName, ":")[0], `"`, "", -1)
+		if strings.HasSuffix(fileName, e) {
+			return true
+		}
+	}
+
+	return false
 }
 
 func createBuildErrorsLog(message string) bool {

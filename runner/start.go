@@ -34,6 +34,7 @@ func start() {
 	buildDelay := buildDelay()
 
 	started := false
+	init := true
 
 	go func() {
 		for {
@@ -54,12 +55,12 @@ func start() {
 				mainLog(err.Error())
 			}
 
-			buildFailed := false
-			if shouldRebuild(eventName) {
-				errorMessage, ok := build()
+			generateFailed := false
+			if shouldRegenerate(eventName) {
+				errorMessage, ok := gqlGenerate()
 				if !ok {
-					buildFailed = true
-					mainLog("Build Failed: \n %s", errorMessage)
+					generateFailed = true
+					mainLog("GQL Generate Failed: \n %s", errorMessage)
 					if !started {
 						os.Exit(1)
 					}
@@ -67,12 +68,12 @@ func start() {
 				}
 			}
 
-			generateFailed := false
-			if shouldRegenerate(eventName) {
-				errorMessage, ok := gqlGenerate()
+			buildFailed := false
+			if shouldRebuild(eventName) {
+				errorMessage, ok := build()
 				if !ok {
-					generateFailed = true
-					mainLog("GQL Generate Failed: \n %s", errorMessage)
+					buildFailed = true
+					mainLog("Build Failed: \n %s", errorMessage)
 					if !started {
 						os.Exit(1)
 					}
@@ -88,6 +89,12 @@ func start() {
 			}
 
 			started = true
+			// if first run, flush events
+			if init {
+				mainLog("flushing events on startup")
+				flushEvents()
+				init = false
+			}
 			mainLog(strings.Repeat("-", 20))
 		}
 	}()

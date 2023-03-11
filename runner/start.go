@@ -55,11 +55,24 @@ func start() {
 				mainLog(err.Error())
 			}
 
-			generateFailed := false
-			if shouldRegenerate(eventName) {
+			goGenerateFailed := false
+			if shouldGQLGenerate(eventName) {
+				errorMessage, ok := goGenerate()
+				if !ok {
+					goGenerateFailed = true
+					mainLog("GQL Generate Failed: \n %s", errorMessage)
+					if !started {
+						os.Exit(1)
+					}
+					createBuildErrorsLog(errorMessage)
+				}
+			}
+
+			gqlGenerateFailed := false
+			if shouldGQLGenerate(eventName) {
 				errorMessage, ok := gqlGenerate()
 				if !ok {
-					generateFailed = true
+					gqlGenerateFailed = true
 					mainLog("GQL Generate Failed: \n %s", errorMessage)
 					if !started {
 						os.Exit(1)
@@ -81,7 +94,7 @@ func start() {
 				}
 			}
 
-			if !buildFailed && !generateFailed {
+			if !buildFailed && !gqlGenerateFailed && !goGenerateFailed {
 				if started {
 					stopChannel <- true
 				}

@@ -72,12 +72,12 @@ func shouldRebuild(eventName string) bool {
 	return false
 }
 
-func shouldRegenerate(eventName string) bool {
+func shouldGQLGenerate(eventName string) bool {
 	if eventName == "/" {
 		return true
 	}
 
-	for _, e := range strings.Split(settings["regenerate_ext"], ",") {
+	for _, e := range strings.Split(settings["gqlgenerate_ext"], ",") {
 		e = strings.TrimSpace(e)
 		fileName := strings.Replace(strings.Split(eventName, ":")[0], `"`, "", -1)
 		if strings.HasSuffix(fileName, e) {

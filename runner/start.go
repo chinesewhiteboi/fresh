@@ -56,7 +56,7 @@ func start() {
 			}
 
 			goGenerateFailed := false
-			if shouldGQLGenerate(eventName) {
+			if shouldGoGenerate(eventName) {
 				errorMessage, ok := goGenerate()
 				if !ok {
 					goGenerateFailed = true

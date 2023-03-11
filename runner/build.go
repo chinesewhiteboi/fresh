@@ -9,7 +9,7 @@ import (
 
 func goGenerate() (string, bool) {
 	buildLog("Go generating...")
-	cmd := exec.Command("go", "generate", root())
+	cmd := exec.Command("go", "generate", "./...")
 
 	stderr, err := cmd.StderrPipe()
 	if err != nil {
